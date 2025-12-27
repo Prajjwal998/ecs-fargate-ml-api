@@ -1,13 +1,15 @@
 # ECS Fargate ML API Deployment
 
-## Objective
-This project demonstrates containerization, CI/CD automation, AWS ECS Fargate deployment, monitoring, and security best practices for a simple API service.
+## Overview
+This project demonstrates containerization, CI/CD automation, cloud deployment, monitoring, and security best practices using AWS ECS Fargate.
 
 The application exposes two endpoints:
 - `GET /health`
 - `GET /predict` → `{ "score": 0.75 }`
 
-## Architecture
+---
+
+## Architecture Diagram
 
 User
 |
@@ -22,12 +24,13 @@ ECS Fargate Service
 v
 FastAPI Container
 
+
 ---
 
 ## Technology Stack
 - Python (FastAPI)
 - Docker (multi-stage, non-root)
-- Amazon ECS Fargate
+- AWS ECS Fargate
 - Amazon ECR
 - Application Load Balancer
 - GitHub Actions (CI/CD)
@@ -35,53 +38,35 @@ FastAPI Container
 
 ---
 
-## Application Endpoints
-
-### Health Check
-GET /health
-Response:
-{ "status": "ok" }
-
-### Prediction
-GET /predict
-Response:
-{ "score": 0.75 }
-
----
-
-## Containerization
-- Multi-stage Docker build
-- Runs as a non-root user
-- Lightweight production image
-- Health check enabled
-
----
-
-## CI/CD Pipeline (GitHub Actions)
+## CI/CD Workflow
 CI/CD is implemented using GitHub Actions.
-On every push to the main branch:
+
+On every push to the `main` branch:
 1. Docker image is built
-2. GitHub Actions authenticates to AWS using OIDC (no access keys)
+2. GitHub Actions authenticates to AWS using OIDC (no static credentials)
 3. Image is pushed to Amazon ECR
-4. ECS Fargate service performs a rolling deployment
-This ensures automated and zero-downtime deployments.
+4. ECS service is updated using a rolling deployment
+
+This ensures zero-downtime deployments.
 
 ---
 
-## Deployment Flow
+## Deployment Steps
 1. Code is pushed to GitHub
-2. GitHub Actions builds and pushes the image to ECR
+2. GitHub Actions builds and pushes image to ECR
 3. ECS Fargate pulls the latest image
-4. Application Load Balancer routes traffic to healthy tasks
+4. ALB routes traffic to healthy ECS tasks
 
 ---
 
-## Monitoring
-Monitoring is implemented using Amazon CloudWatch.
+## Monitoring & Alerts
+
+### Metrics
+- CPU Utilization (ECS Service)
+- Memory Utilization (ECS Service)
 
 ### Dashboard
-- ECS Service CPU Utilization
-- ECS Service Memory Utilization
+- CloudWatch dashboard with CPU and memory graphs
 
 ### Alerts
 - High CPU utilization (>70%)
@@ -90,17 +75,21 @@ Monitoring is implemented using Amazon CloudWatch.
 ---
 
 ## Security Considerations
-- IAM roles follow least-privilege access
-- GitHub Actions uses OIDC (no static AWS credentials)
-- No secrets stored in the repository
+- IAM roles follow least-privilege principles
+- GitHub Actions uses OIDC (no AWS access keys)
 - Containers run as non-root users
-- HTTPS can be enabled using ACM with ALB (recommended for production)
+- No credentials stored in the repository
+- HTTPS can be enforced via ACM with ALB (recommended for production)
 
 ---
 
-Status
-- ECS Service running on Fargate
-- Application Load Balancer healthy
-- API publicly accessible
-- CI/CD fully automated
-- Monitoring and alerts enabled
+## Endpoints
+
+### Health Check
+
+Response:
+```json
+GET /health
+{ "status": "ok" }
+GET /predict
+{ "score": 0.75 }
