@@ -49,7 +49,7 @@ Response:
 
 ---
 
-##Containerization
+## Containerization
 - Multi-stage Docker build
 - Runs as a non-root user
 - Lightweight production image
@@ -57,7 +57,7 @@ Response:
 
 ---
 
-##CI/CD Pipeline (GitHub Actions)
+## CI/CD Pipeline (GitHub Actions)
 CI/CD is implemented using GitHub Actions.
 On every push to the main branch:
 1. Docker image is built
@@ -68,7 +68,7 @@ This ensures automated and zero-downtime deployments.
 
 ---
 
-Deployment Flow
+## Deployment Flow
 1. Code is pushed to GitHub
 2. GitHub Actions builds and pushes the image to ECR
 3. ECS Fargate pulls the latest image
@@ -76,20 +76,20 @@ Deployment Flow
 
 ---
 
-##Monitoring
+## Monitoring
 Monitoring is implemented using Amazon CloudWatch.
 
-###Dashboard
+### Dashboard
 - ECS Service CPU Utilization
 - ECS Service Memory Utilization
 
-###Alerts
+### Alerts
 - High CPU utilization (>70%)
 - Unhealthy ECS targets detected by ALB
 
 ---
 
-##Security Considerations
+## Security Considerations
 - IAM roles follow least-privilege access
 - GitHub Actions uses OIDC (no static AWS credentials)
 - No secrets stored in the repository
